@@ -1,6 +1,9 @@
 import { Outlet,Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { Header } from "../components/Header";
+import ModalImportData from "../components/ModalImportData";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const ProtectedRoute = () => {
 
@@ -17,7 +20,9 @@ export const ProtectedRoute = () => {
                     <main className="flex-1 p-10">
                         <Outlet/>
                     </main>
+                    <ToastContainer/>
                 </div>
+                <ModalImportData/>
             </div>
         ) : <Navigate to="/"/>}
     </>
