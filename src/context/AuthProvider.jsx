@@ -1,52 +1,27 @@
-import { useState, useEffect, createContext } from "react";
-
+import React, { useState, useEffect, createContext } from 'react';
 
 const AuthContext = createContext();
 
-// eslint-disable-next-line react/prop-types
-const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({});
-  const [loading, setLoading] = useState(false);
+export const AuthProvider = ({ children }) => {
+  const [auth, setAuth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-//   useEffect(() => {
-//     const authUser = async () => {
-//       const token = localStorage.getItem("token");
-//       if (!token) {
-//         setLoading(false);
-//         return;
-//       }
-
-//       try {
-//         // const { data } = await 
-//         setAuth(data);
-//       } catch (error) {
-//         console.log(error);
-//         setAuth({});
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     authUser();
-//   }, []);
-
-  const closeSession = () => {
-    setAuth({});
-  };
+  useEffect(() => {
+    // Simulación de verificación de autenticación
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Suponiendo que tienes un endpoint para obtener el usuario
+      setAuth({ userId: token });
+    }
+    setLoading(false); // Loading termina al completar el proceso
+  }, []);
 
   return (
-    <AuthContext.Provider
-      value={{
-        auth,
-        setAuth,
-        loading,
-        closeSession,
-      }}
-    >
+    <AuthContext.Provider value={{ auth, setAuth, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export { AuthProvider };
-
 export default AuthContext;
+

@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 
- const { setAuth } = useAuth();
+  const { setAuth } = useAuth();
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,9 +37,9 @@ export default function Login() {
         if (data.error) {
           alert(data.error);
         } else {
-            localStorage.setItem("token", data.userId);
-            setAuth(data.userId);
-            navigate("/dashboard");
+          localStorage.setItem("token", data.userId);
+          setAuth(data.userId);
+          navigate("/dashboard");
         }
       })
       .catch((error) => {
