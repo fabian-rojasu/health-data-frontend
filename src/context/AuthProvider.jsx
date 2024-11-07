@@ -7,13 +7,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulación de verificación de autenticación
     const token = localStorage.getItem('token');
     if (token) {
-      // Suponiendo que tienes un endpoint para obtener el usuario
       setAuth({ userId: token });
     }
-    setLoading(false); // Loading termina al completar el proceso
+    setLoading(false); 
   }, []);
 
   return (
