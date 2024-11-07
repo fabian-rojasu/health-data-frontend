@@ -38,7 +38,6 @@ export default function Register() {
         if (data.error) {
             toast(data.error);
         } else {
-          alert("Registro exitoso");
           navigate("/login");
         }
       })

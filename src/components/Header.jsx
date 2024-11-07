@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { BiImport } from "react-icons/bi";
 import useModal from "../hooks/useModal";
+import { useNavigate } from 'react-router-dom';
 export const Header = () => {
-
+  const navigate = useNavigate();
   const { handleModal } = useModal();
 
   const handleImport = () => {
@@ -23,8 +24,13 @@ export const Header = () => {
           Import Data
         </button>
 
-        <Link>
-          <FaUserCircle color="0b1122" size={30} />
+        <Link
+          to="/profile"
+          className="btn-profile"
+          onClick={() => navigate('/profile')}
+        >
+          
+          <FaUserCircle color="0b1122" size={30}/>
         </Link>
       </div>
     </header>
