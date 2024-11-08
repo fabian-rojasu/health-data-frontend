@@ -166,3 +166,24 @@ input:focus, select:focus {
   padding: 10px;
   gap: 60px;
 }
+
+.dashboard-subtitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.chart-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  min-width: 150px;
+}

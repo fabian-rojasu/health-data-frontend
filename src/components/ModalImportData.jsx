@@ -4,7 +4,8 @@ import "./ModalImport.css";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 
-const ModalImportData = () => {
+// eslint-disable-next-line react/prop-types
+const ModalImportData = ({ onDataImported }) => {
   const { auth } = useAuth();
   const { modal, handleModal } = useModal();
   const [selectedFile, setSelectedFile] = useState(
@@ -16,27 +17,27 @@ const ModalImportData = () => {
     setSelectedFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    console.log(auth)
     formData.append("user_id", auth.userId);
     formData.append("file_type", dataType);
     formData.append("file", selectedFile);
 
-    console.log(formData.get("user_id"));
-    console.log(formData.get("file_type"));
-    console.log(formData.get("file"));
+    try {
+      await fetch("http://127.0.0.1:8000/import-data", {
+        method: "POST",
+        body: formData,
+      });
 
-    fetch("http://127.0.0.1:8000/import-data", {
-      method: "POST",
-      body: formData,
-    });
-
-    toast.success("Data imported successfully");
-
-    handleModal();
+      toast.success("Data imported successfully");
+      onDataImported();
+      handleModal();
+    } catch (error) {
+      console.error(error)
+      toast.error("Error importing data");
+    }
   };
 
   if (!modal) return null;

@@ -8,7 +8,8 @@ import { GiMuscleUp } from "react-icons/gi";
 import { FaWeight, FaRuler, FaWater, FaWalking } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 
-export const Dashboard = () => {
+// eslint-disable-next-line react/prop-types
+export const Dashboard = ({ dataImportFlag }) => {
 
   const { auth, isLoading } = useAuth();
 
@@ -40,8 +41,10 @@ export const Dashboard = () => {
       }
     };
 
-    fetchDashboardData();
-  }, [auth.userId]);
+    if (!isLoading) {
+      fetchDashboardData();
+    }
+  }, [auth.userId, isLoading, dataImportFlag]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectedMetric, setSelectedMetric] = useState('steps');
@@ -111,6 +114,7 @@ export const Dashboard = () => {
         </div>
       </div>
       <div className="historical-data-section">
+        <h2 className="dashboard-subtitle">Datos Históricos</h2>
         <div className="chart-controls">
           <select 
             value={selectedMetric} 
@@ -134,6 +138,7 @@ export const Dashboard = () => {
             <option value="1y">Último año</option>
           </select>
         </div>
+        
         <HistoricalChart 
           userId={1}
           metricType={selectedMetric}
