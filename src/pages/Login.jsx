@@ -38,7 +38,11 @@ export default function Login() {
           alert(data.error);
         } else {
           localStorage.setItem("token", data.userId);
-          setAuth(data.userId);
+          setAuth(
+            {
+              userId: data.userId
+            }
+          );
           navigate("/dashboard");
         }
       })

@@ -7,8 +7,10 @@ import { toast } from "react-toastify";
 const ModalImportData = () => {
   const { auth } = useAuth();
   const { modal, handleModal } = useModal();
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [dataType, setDataType] = useState(null); // Default value
+  const [selectedFile, setSelectedFile] = useState(
+    "weight"
+  );
+  const [dataType, setDataType] = useState("weight");
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -18,7 +20,8 @@ const ModalImportData = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("user_id", auth);
+    console.log(auth)
+    formData.append("user_id", auth.userId);
     formData.append("file_type", dataType);
     formData.append("file", selectedFile);
 

@@ -1,5 +1,5 @@
-import React from "react";
-import { Line } from "react-chartjs-2";
+import { useState, useEffect } from 'react';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,9 +8,8 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
-} from "chart.js";
-import { subDays, subMonths, subYears, format } from "date-fns";
+  Legend
+} from 'chart.js';
 
 ChartJS.register(
   CategoryScale,
@@ -22,63 +21,98 @@ ChartJS.register(
   Legend
 );
 
-const HistoricalChart = ({ type, period, data }) => {
-  const getChartData = () => {
-    if (!Array.isArray(data)) {
-      return {
-        labels: [],
-        datasets: [],
-      };
-    }
+// eslint-disable-next-line react/prop-types
+const HistoricalChart = ({ userId, metricType, timeRange }) => {
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const now = new Date();
-    let startDate;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:8000/dashboard/historical/${userId}?metric_type=${metricType}&time_range=${timeRange}`
+        );
+        const data = await response.json();
+        
+        if (metricType === 'exercise') {
+          const exerciseCounts = data.dates.map(date => {
+            const dayData = data.data[date];
+            return dayData.exercises.reduce((total, ex) => total + ex.count, 0);
+          });
 
-    switch (period) {
-      case "1 semana":
-        startDate = subDays(now, 7);
-        break;
-      case "1 mes":
-        startDate = subMonths(now, 1);
-        break;
-      case "3 meses":
-        startDate = subMonths(now, 3);
-        break;
-      case "6 meses":
-        startDate = subMonths(now, 6);
-        break;
-      case "1 año":
-        startDate = subYears(now, 1);
-        break;
-      default:
-        startDate = subDays(now, 7);
-    }
-
-    const filteredData = data.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate >= startDate && itemDate <= now;
-    });
-
-    const labels = filteredData.map((item) => format(new Date(item.date), "dd/MM/yyyy"));
-    const dataset = filteredData.map((item) => item.value);
-
-    return {
-      labels,
-      datasets: [
-        {
-          label: `Histórico de ${type}`,
-          data: dataset,
-          fill: false,
-          backgroundColor: "rgba(75,192,192,0.4)",
-          borderColor: "rgba(75,192,192,1)",
-        },
-      ],
+          setChartData({
+            labels: data.dates,
+            datasets: [
+              {
+                label: 'Total Exercise Count',
+                data: exerciseCounts,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+              },
+              {
+                label: 'Duration (minutes)',
+                data: data.total_duration,
+                borderColor: 'rgb(255, 99, 132)',
+                tension: 0.1
+              }
+            ]
+          });
+        } else {
+          setChartData({
+            labels: data.dates,
+            datasets: [{
+              label: getMetricLabel(metricType),
+              data: data.values,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+            }]
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching historical data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
+
+    fetchData();
+  }, [userId, metricType, timeRange]);
+
+  const getMetricLabel = (type) => {
+    const labels = {
+      weight: 'Weight (kg)',
+      muscle: 'Muscle Mass (%)',
+      fat: 'Body Fat (%)',
+      water: 'Water (ml)',
+      steps: 'Steps Count'
+    };
+    return labels[type] || type;
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: `Historical ${getMetricLabel(metricType)} Data`
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: false
+      }
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (!chartData) return <div>No data available</div>;
+
   return (
-    <div className="historical-chart">
-      <Line data={getChartData()} />
+    <div style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+      <Line data={chartData} options={options} />
     </div>
   );
 };
