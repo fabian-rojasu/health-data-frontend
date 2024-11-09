@@ -111,6 +111,7 @@ export default function Register() {
         <button type="submit" className="submit-button">
           Registrarse
         </button>
+        <a href="/login" className="loginRef">LogIn</a>
       </form>
       <ToastContainer />
     </div>

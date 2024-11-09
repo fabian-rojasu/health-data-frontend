@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { ModalUpdateUser } from '../components/ModalUpdateUser';
+import { useEffect, useState } from "react";
+import { ModalUpdateUser } from "../components/ModalUpdateUser";
 
 export const Profile = () => {
   const [data, setData] = useState(null);
@@ -9,31 +9,31 @@ export const Profile = () => {
 
   // Función para hacer el fetch del perfil de usuario
   const fetchUserProfile = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (token) {
       fetch(`http://127.0.0.1:8000/profile/${token}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setData(data);
-        setFormData(data); // Inicializar el formulario con los datos actuales
-        setIsLoading(false);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setIsLoading(false);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setData(data);
+          setFormData(data); // Inicializar el formulario con los datos actuales
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setIsLoading(false);
+        });
     } else {
       setIsLoading(false);
     }
@@ -64,39 +64,44 @@ export const Profile = () => {
 
   // Guarda los cambios y vuelve a cargar el perfil
   const handleSaveChanges = () => {
-    const token = localStorage.getItem('token');
-    
+    const token = localStorage.getItem("token");
+
     fetch(`http://127.0.0.1:8000/profile/${token}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: formData.email,
         username: formData.username,
         password: formData.password,
-        birthday: new Date(formData.birthday).toISOString().split('T')[0], // Asegura el formato correcto de fecha
+        birthday: new Date(formData.birthday).toISOString().split("T")[0], // Asegura el formato correcto de fecha
         gender: formData.gender,
       }),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(() => {
-      fetchUserProfile(); // Vuelve a cargar el perfil después de la actualización
-      setIsModalOpen(false); // Cierra el modal
-    })
-    .catch(error => console.error('Error:', error));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then(() => {
+        fetchUserProfile(); // Vuelve a cargar el perfil después de la actualización
+        setIsModalOpen(false); // Cierra el modal
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   //Metodo para cerrar sesion
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login';
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+  //Metodo para volver a la pagina de dashboard
+  const backButton = () => {
+    window.location.href = "/dashboard";
   };
 
   return (
@@ -104,24 +109,37 @@ export const Profile = () => {
       <div style={styles.container}>
         {isLoading ? (
           <p style={styles.loadingText}>Cargando...</p>
-        ) : (
-          data ? (
-            <div style={styles.profileCard}>
-              <h2 style={styles.title}>Perfil de Usuario</h2>
-              <div style={styles.profileInfo}>
-                <p><strong>Email:</strong> {data.email}</p>
-                <p><strong>Username:</strong> {data.username}</p>
-                <p><strong>Birthday:</strong> {data.birthday}</p>
-                <p><strong>Gender:</strong> {data.gender}</p>
-              </div>
-              <button style={styles.editButton} onClick={handleEditClick}>Modificar</button>
-              <div>
-                <button style={styles.editButton} onClick={handleLogout}>Cerrar Sesion</button>
-              </div>
+        ) : data ? (
+          <div style={styles.profileCard}>
+            <h2 style={styles.title}>Perfil de Usuario</h2>
+            <div style={styles.profileInfo}>
+              <p>
+                <strong>Email:</strong> {data.email}
+              </p>
+              <p>
+                <strong>Username:</strong> {data.username}
+              </p>
+              <p>
+                <strong>Birthday:</strong> {data.birthday}
+              </p>
+              <p>
+                <strong>Gender:</strong> {data.gender}
+              </p>
             </div>
-          ) : (
-            <p style={styles.noData}>No se encontraron datos del perfil</p>
-          )
+            <button style={styles.editButton} onClick={handleEditClick}>
+              Modificar
+            </button>
+            <div>
+              <button style={styles.closeButton} onClick={handleLogout}>
+                Cerrar Sesion
+              </button>
+              <button style={styles.backButton} onClick={backButton}>
+                Volver atrás
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p style={styles.noData}>No se encontraron datos del perfil</p>
         )}
 
         {/* Renderiza el modal si está abierto */}
@@ -140,40 +158,59 @@ export const Profile = () => {
 
 const styles = {
   container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '80vh',
-    backgroundColor: '#f7f9fc',
-    padding: '20px',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "80vh",
+    backgroundColor: "#f7f9fc",
+    padding: "20px",
   },
   profileCard: {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    padding: '30px',
-    maxWidth: '400px',
-    width: '100%',
-    textAlign: 'center',
+    backgroundColor: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    padding: "30px",
+    maxWidth: "400px",
+    width: "100%",
+    textAlign: "center",
   },
   title: {
-    fontSize: '1.5rem',
-    marginBottom: '20px',
-    color: '#333',
-    fontWeight: 'bold',
+    fontSize: "1.5rem",
+    marginBottom: "20px",
+    color: "#333",
+    fontWeight: "bold",
   },
   profileInfo: {
-    fontSize: '1rem',
-    color: '#555',
-    lineHeight: '1.6',
+    fontSize: "1rem",
+    color: "#555",
+    lineHeight: "1.6",
   },
   editButton: {
-    marginTop: '20px',
-    padding: '10px 20px',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
+    marginTop: "20px",
+    padding: "10px 20px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },
+  closeButton: {
+    marginTop: "20px",
+    padding: "10px 20px",
+    backgroundColor: "#ff0000",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    },
+  backButton: {
+    marginTop: "20px",
+    padding: "10px 20px",
+    backgroundColor: "#008000",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    display: "block",
   },
 };

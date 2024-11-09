@@ -187,3 +187,15 @@ input:focus, select:focus {
   background-color: white;
   min-width: 150px;
 }
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  margin-left: 11rem;
+}
+
+.loginRef{
+  color: var(--primary-color);
+  text-decoration: none;
+  margin-left: 15rem;
+}
