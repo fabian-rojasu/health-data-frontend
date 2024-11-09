@@ -1,16 +1,15 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import StatCard from "../components/StatCard";
 import ExerciseList from "../components/ExerciseList";
 import BodyComposition from "../components/BodyComposition";
 import HistoricalChart from "../components/HistoricalChart";
 
 import { GiMuscleUp } from "react-icons/gi";
-import { FaWeight, FaRuler, FaWater, FaWalking } from 'react-icons/fa';
-import useAuth from '../hooks/useAuth';
+import { FaWeight, FaRuler, FaWater, FaWalking } from "react-icons/fa";
+import useAuth from "../hooks/useAuth";
 
 // eslint-disable-next-line react/prop-types
 export const Dashboard = ({ dataImportFlag }) => {
-
   const { auth, isLoading } = useAuth();
 
   if (isLoading) {
@@ -33,11 +32,13 @@ export const Dashboard = ({ dataImportFlag }) => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/dashboard/general/${auth.userId}`); // Ajusta la URL según tu configuración
+        const response = await fetch(
+          `http://127.0.0.1:8000/dashboard/general/${auth.userId}`
+        ); // Ajusta la URL según tu configuración
         const data = await response.json();
         setDashboardData(data);
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        console.error("Error fetching dashboard data:", error);
       }
     };
 
@@ -47,14 +48,14 @@ export const Dashboard = ({ dataImportFlag }) => {
   }, [auth.userId, isLoading, dataImportFlag]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [selectedMetric, setSelectedMetric] = useState('steps');
+  const [selectedMetric, setSelectedMetric] = useState("steps");
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [timeRange, setTimeRange] = useState('1w');
+  const [timeRange, setTimeRange] = useState("1w");
 
   const bodyCompositionData = [
-    { name: "Grasa", value: dashboardData.body_composition.fat },
+    { name: "Grasa", value: dashboardData.body_composition.fat},
     { name: "Músculo", value: dashboardData.body_composition.muscle },
-    { name: "Agua", value: dashboardData.body_composition.water },
+    { name: "Agua", value: dashboardData.body_composition.water},
   ];
 
   return (
@@ -75,11 +76,7 @@ export const Dashboard = ({ dataImportFlag }) => {
             unit="cm"
             icon={FaRuler}
           />
-          <StatCard 
-            title="IMC" 
-            value={dashboardData.bmi} 
-            icon={GiMuscleUp} 
-          />
+          <StatCard title="IMC" value={dashboardData.bmi} icon={GiMuscleUp} />
           <StatCard
             title="Grasa Corporal"
             value={dashboardData.body_fat_percentage}
@@ -116,8 +113,8 @@ export const Dashboard = ({ dataImportFlag }) => {
       <div className="historical-data-section">
         <h2 className="dashboard-subtitle">Datos Históricos</h2>
         <div className="chart-controls">
-          <select 
-            value={selectedMetric} 
+          <select
+            value={selectedMetric}
             onChange={(e) => setSelectedMetric(e.target.value)}
           >
             <option value="steps">Pasos</option>
@@ -127,8 +124,8 @@ export const Dashboard = ({ dataImportFlag }) => {
             <option value="muscle">Músculo</option>
             <option value="fat">Grasa</option>
           </select>
-          <select 
-            value={timeRange} 
+          <select
+            value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
           >
             <option value="1w">Última semana</option>
@@ -138,8 +135,8 @@ export const Dashboard = ({ dataImportFlag }) => {
             <option value="1y">Último año</option>
           </select>
         </div>
-        
-        <HistoricalChart 
+
+        <HistoricalChart
           userId={1}
           metricType={selectedMetric}
           timeRange={timeRange}

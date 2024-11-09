@@ -8,6 +8,16 @@ const BodyComposition = ({ data }) => {
   
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
+  // Check if data exists and has values
+  if (!data || data.length === 0) {
+    return (
+      <div className="body-composition">
+        <h3 className="composition-title">Composición Corporal</h3>
+        <p className="no-data-message">No hay datos disponibles</p>
+      </div>
+    );
+  }
+
   return (
     <div className="body-composition">
       <h3 className="composition-title">Composición Corporal</h3>
