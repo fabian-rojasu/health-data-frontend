@@ -79,7 +79,7 @@ export default function Login() {
         <button type="submit" className="submit-button">
           Iniciar sesión
         </button>
-        <a href="/register">Registrarse</a>
+        <a href="/register" className="registerRef">Registrarse</a>
         
         
         

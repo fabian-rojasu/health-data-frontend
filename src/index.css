@@ -188,7 +188,7 @@ input:focus, select:focus {
   min-width: 150px;
 }
 
-a {
+.registerRef {
   color: var(--primary-color);
   text-decoration: none;
   margin-left: 11rem;
