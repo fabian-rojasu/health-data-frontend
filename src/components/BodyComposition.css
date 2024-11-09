@@ -15,3 +15,9 @@
 .chart-container {
   height: 16rem;
 }
+
+.no-data-message {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
